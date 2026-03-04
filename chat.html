@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+<h2>Production Chat</h2>
+
+<select id="users"></select><br><br>
+
+<input id="msg">
+<button onclick="send()">Send</button>
+
+<div id="chat"></div>
+
+<script>
+const socket=io();
+const user=localStorage.getItem("user");
+
+socket.emit("join",user);
+
+socket.on("online-users",(list)=>{
+users.innerHTML="";
+list.filter(u=>u!==user).forEach(u=>{
+let o=document.createElement("option");
+o.value=u;o.text=u;
+users.appendChild(o);
+});
+});
+
+function send(){
+socket.emit("private-message",{
+from:user,
+to:users.value,
+message:msg.value
+});
+}
+
+socket.on("private-message",(d)=>{
+chat.innerHTML+=`<p>${d.from}: ${d.message}</p>`;
+});
+</script>
+</body>
+</html>

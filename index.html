@@ -1,0 +1,44 @@
+
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Register</h2>
+<input id="ruser" placeholder="Username">
+<input id="rpass" placeholder="Password" type="password">
+<button onclick="register()">Register</button>
+
+<h2>Login</h2>
+<input id="luser" placeholder="Username">
+<input id="lpass" placeholder="Password" type="password">
+<button onclick="login()">Login</button>
+
+<script>
+async function register(){
+await fetch("/api/auth/register",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+username:ruser.value,
+password:rpass.value
+})
+});
+alert("Registered");
+}
+
+async function login(){
+let res=await fetch("/api/auth/login",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+username:luser.value,
+password:lpass.value
+})
+});
+let data=await res.json();
+localStorage.setItem("token",data.token);
+localStorage.setItem("user",data.username);
+location="chat.html";
+}
+</script>
+</body>
+</html>
